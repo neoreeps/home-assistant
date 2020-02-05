@@ -1,0 +1,15 @@
+version: '2'
+
+services:
+  homeassistant:
+    container_name: home-assistant
+    image: homeassistant/raspberrypi3-homeassistant:0.104.3
+    volumes:
+      - /data/ha-config:/config
+      - /data/certbot:/certbot
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /etc/localtime:/etc/localtime:ro
+    devices:
+      - /dev/ttyACM0:/dev/ttyACM0
+    restart: always
+    network_mode: host

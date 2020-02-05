@@ -1,0 +1,177 @@
+homeassistant:
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: 38.0725000
+  longitude: -122.5616667
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 160
+  # metric for Metric, imperial for Imperial
+  unit_system: imperial
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: America/Los_Angeles
+  
+  customize: !include customize.yaml
+
+  customize_glob:
+    "binary_sensor.key_*":
+      hidden: true
+
+  auth_providers:
+    - type: homeassistant
+
+# Adds links and welcome to home screen
+#introduction:
+default_config:
+
+alexa:
+  smart_home: !include alexa.yaml
+
+mobile_app:
+
+zwave:
+  usb_path: /dev/ttyACM0
+  device_config: !include zwave_device_config.yaml
+  network_key: "0x3E, 0x23, 0x17, 0x97, 0xD1, 0x1E, 0xAC, 0xA6, 0x14, 0x55, 0xB5, 0x6F, 0x87, 0x09, 0x6D, 0x6A"
+
+system_health:
+    
+lovelace:
+    #  mode: yaml
+
+wink:
+
+#ecobee:
+#api_key: arZo1lxMoEmEo2vT3W0HurOx5KheFoMA
+
+tesla:
+  username: !secret tesla_login
+  password: !secret tesla_passwd
+  scan_interval: 3600
+
+# simplisafe
+#alarm_control_panel:
+#  platform: simplisafe
+#  username: !secret simplisafe_login
+#  password: !secret simplisafe_passwd
+
+# Enables the frontend
+frontend:
+  themes: !include themes.yaml
+
+  #asuswrt:
+  #  host: 192.168.42.1
+  #  username: !secret router_login
+  #  password: !secret router_passwd
+
+#owntracks:
+#max_gps_accuracy: 200
+
+device_tracker:
+- platform: linksys_smart
+  host: 192.168.42.1
+  #  username: !secret router_login
+  #password: !secret router_passwd
+  #interval_seconds: 30
+  #consider_home: 600
+  #new_defice_defaults:
+  #    track_new_devices: True
+  #    hide_if_away: False
+
+# Enables configuration UI
+config:
+
+http:
+  #api_password: !secret api_passwd
+  #ip_ban_enabled: true
+  #login_attempts_threshold: 10
+  ssl_certificate: /etc/letsencrypt/live/home.reeps.io/fullchain.pem
+  ssl_key: /etc/letsencrypt/live/home.reeps.io/privkey.pem
+  base_url: home.reeps.io
+
+# Checks for available updates
+# Note: This component will send some information about your system to
+# the developers to assist with development of Home Assistant.
+# For more information, please see:
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  include_used_components: true
+
+# Discover some devices automatically
+discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+#conversation:
+
+# Enables support for tracking state changes over time
+history:
+
+# View all events in a logbook
+logbook:
+
+# Track the sun
+sun:
+
+# Text to speech
+#tts:
+#  - platform: google
+#    cache: true
+#    cache_dir: /tmp/tts
+#    time_memory: 300
+#    language: 'en'
+
+#ios:
+
+cover:
+    - platform: myq
+      entity_namespace: myq
+      username: !secret myq_login
+      password: !secret myq_passwd
+      type: chamberlain
+
+speedtestdotnet:
+  monitored_conditions:
+    - ping
+    - download
+    - upload
+
+ffmpeg:
+  ffmpeg_bin: /usr/bin/ffmpeg
+
+arlo:
+    username: !secret arlo_login
+    password: !secret arlo_passwd
+
+camera:
+  - platform: arlo
+    ffmpeg_arguments: '-pred 1 -q:v 2'
+      
+sensor:
+  - platform: systemmonitor
+    resources:
+      - type: memory_use_percent
+      - type: processor_use
+      - type: last_boot
+      - type: throughput_network_in
+        arg: wlan0
+      - type: throughput_network_out
+        arg: wlan0
+  - platform: yr
+  - platform: command_line
+    name: SSL cert expiry
+    unit_of_measurement: days
+    scan_interval: 10800
+    command: "/certbot/ssl-cert-check -b -c /etc/letsencrypt/live/home.reeps.io/cert.pem |awk '{print $NF}'"
+  - platform: arlo
+    #monitored_conditions:
+    #  - captured_today
+    #  - last_capture
+    #  - total_cameras
+    #  - battery_level
+    #  - signal_strength
+
+shell_command: !include shell_commands.yaml
+group: !include groups.yaml
+#proximity: !include proximity.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml

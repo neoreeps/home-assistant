@@ -1,0 +1,6 @@
+sensor.network_throughput_in_wlan0:
+  friendly_name: Network Rx
+sensor.network_throughput_out_wlan0:
+  friendly_name: Network Tx
+sensor.processor_use:
+  friendly_name: CPU Use

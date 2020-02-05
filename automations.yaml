@@ -1,0 +1,108 @@
+- id: '1575141383597'
+  alias: Night Lights On
+  description: Turn on the lights at sunset
+  trigger:
+  - event: sunset
+    offset: -01:00
+    platform: sun
+  condition: []
+  action:
+  - data:
+      brightness_pct: 15
+      entity_id: light.stair_lights
+    service: homeassistant.turn_on
+  - data:
+      entity_id: switch.porch_lights
+    service: homeassistant.turn_on
+- id: '1575141770149'
+  alias: Night Lights Off
+  description: Turn off the lights at sunrise
+  trigger:
+  - event: sunrise
+    platform: sun
+  condition: []
+  action:
+  - data:
+      entity_id: light.stair_lights
+    service: homeassistant.turn_off
+  - data:
+      entity_id: switch.porch_lights
+    service: homeassistant.turn_off
+- id: '1577677205027'
+  alias: Kitchen Lights On
+  description: Turn on the kitchen lights with motion
+  trigger:
+  - entity_id: binary_sensor.kitchen_motion_sensor
+    platform: state
+    to: 'on'
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: light.kitchen_lights
+        state: 'off'
+      - condition: or
+        conditions:
+        - condition: sun
+          after: sunset
+          after_offset: '-01:00:00'
+        - condition: sun
+          before: sunrise
+          before_offset: '+01:00:00'
+  action:
+  - data:
+      brightness_pct: 15
+      entity_id: light.kitchen_lights
+    service: homeassistant.turn_on
+- id: '1577677822873'
+  alias: Kitchen Lights Off
+  description: Turn off when no motion is detected
+  trigger:
+  - entity_id: binary_sensor.kitchen_motion_sensor
+    for: 00:20:10
+    platform: state
+    to: 'off'
+  condition: []
+  action:
+  - data:
+      entity_id: light.kitchen_lights
+    service: homeassistant.turn_off
+- id: '1577858799562'
+  alias: Dining Light On
+  description: Turn on the dining room light with motion
+  trigger:
+  - entity_id: binary_sensor.dining_motion_sensor
+    platform: state
+    to: 'on'
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: light.dining_room_light
+        state: 'off'
+      - condition: or
+        conditions:
+        - condition: sun
+          after: sunset
+          after_offset: '-01:00:00'
+        - condition: sun
+          before: sunrise
+          before_offset: '+01:00:00'
+  action:
+  - data:
+      brightness_pct: 50
+      entity_id: light.dining_room_light
+    service: homeassistant.turn_on
+- id: '1577858907155'
+  alias: Dining Lights Off
+  description: Turn off the dining room lights when no motion is detected
+  trigger:
+  - entity_id: binary_sensor.dining_motion_sensor
+    for: 00:10:10
+    platform: state
+    to: 'off'
+  condition: []
+  action:
+  - data:
+      entity_id: light.dining_room_light
+    service: homeassistant.turn_off

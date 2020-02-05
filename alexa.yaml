@@ -1,0 +1,20 @@
+endpoint: https://api.amazonalexa.com/v3/events
+client_id: !secret alexa_client_id
+client_secret: !secret alexa_client_secret
+filter:
+  include_entities:
+    - switch.guest_room_lights
+    - light.stair_lights
+    - switch.family_room_tree
+    - switch.living_room_tree
+    - light.master_bath_light
+    - light.master_vanity
+    - switch.master_shower_light
+    - switch.master_shower_fan
+    - light.kitchen_lights
+    - light.dining_room_light
+    - switch.family_room_light
+    - switch.master_closet_light
+    - light.study_light
+    - light.craft_room_light
+    - light.kennys_lamp
