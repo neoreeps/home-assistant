@@ -18,3 +18,8 @@ filter:
     - light.study_light
     - light.craft_room_light
     - light.kennys_lamp
+    - light.sabrinas_lamp
+    - light.table_right
+    - light.table_left
+    - light.floor_right
+    - light.floor_left

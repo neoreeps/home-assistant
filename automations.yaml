@@ -38,17 +38,17 @@
   condition:
     condition: and
     conditions:
-      - condition: state
-        entity_id: light.kitchen_lights
-        state: 'off'
-      - condition: or
-        conditions:
-        - condition: sun
-          after: sunset
-          after_offset: '-01:00:00'
-        - condition: sun
-          before: sunrise
-          before_offset: '+01:00:00'
+    - condition: state
+      entity_id: light.kitchen_lights
+      state: 'off'
+    - condition: or
+      conditions:
+      - condition: sun
+        after: sunset
+        after_offset: -01:00:00
+      - condition: sun
+        before: sunrise
+        before_offset: +01:00:00
   action:
   - data:
       brightness_pct: 15
@@ -75,22 +75,22 @@
     platform: state
     to: 'on'
   condition:
-    condition: and
+  - condition: and
     conditions:
-      - condition: state
-        entity_id: light.dining_room_light
-        state: 'off'
-      - condition: or
-        conditions:
-        - condition: sun
-          after: sunset
-          after_offset: '-01:00:00'
-        - condition: sun
-          before: sunrise
-          before_offset: '+01:00:00'
+    - condition: state
+      entity_id: light.dining_room_light
+      state: 'off'
+    - condition: or
+      conditions:
+      - after: sunset
+        after_offset: -01:00:00
+        condition: sun
+      - before: sunrise
+        before_offset: +01:00:00
+        condition: sun
   action:
   - data:
-      brightness_pct: 50
+      brightness_pct: 30
       entity_id: light.dining_room_light
     service: homeassistant.turn_on
 - id: '1577858907155'
@@ -106,3 +106,56 @@
   - data:
       entity_id: light.dining_room_light
     service: homeassistant.turn_off
+- id: '1584326906110'
+  alias: Lights On at Sunset
+  description: Turn on lights at offset
+  trigger:
+  - event: sunset
+    offset: -01:00:00
+    platform: sun
+  condition: []
+  action:
+  - data:
+      brightness_pct: 65
+    entity_id: light.kennys_lamp
+    service: light.turn_on
+  - data:
+      brightness_pct: 65
+    entity_id: light.sabrinas_lamp
+    service: light.turn_on
+  - data:
+      brightness_pct: 65
+    entity_id: light.table_left
+    service: light.turn_on
+  - data:
+      brightness_pct: 65
+    entity_id: light.table_right
+    service: light.turn_on
+  - data:
+      brightness_pct: 65
+    entity_id: light.floor_left
+    service: light.turn_on
+  - data:
+      brightness_pct: 65
+    entity_id: light.floor_right
+    service: light.turn_on
+- id: '1584327993330'
+  alias: Master Lights Off
+  description: Turn off the master lights when nobody is home
+  trigger:
+  - event: sunrise
+    platform: sun
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: person.sabrina
+      state: not_home
+    - condition: state
+      entity_id: person.kenny_speer
+      state: not_home
+  action:
+  - entity_id: light.kennys_lamp
+    service: light.turn_off
+  - entity_id: light.sabrinas_lamp
+    service: light.turn_off

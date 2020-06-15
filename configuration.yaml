@@ -4,7 +4,7 @@ homeassistant:
   latitude: 38.0725000
   longitude: -122.5616667
   # Impacts weather/sunrise data (altitude above sea level in meters)
-  elevation: 160
+  elevation: 30
   # metric for Metric, imperial for Imperial
   unit_system: imperial
   # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
@@ -38,15 +38,15 @@ system_health:
 lovelace:
     #  mode: yaml
 
-wink:
+#wink:
 
 #ecobee:
 #api_key: arZo1lxMoEmEo2vT3W0HurOx5KheFoMA
 
-tesla:
-  username: !secret tesla_login
-  password: !secret tesla_passwd
-  scan_interval: 3600
+#tesla:
+#username: !secret tesla_login
+#password: !secret tesla_passwd
+#scan_interval: 3600
 
 # simplisafe
 #alarm_control_panel:
@@ -66,11 +66,11 @@ frontend:
 #owntracks:
 #max_gps_accuracy: 200
 
-device_tracker:
-- platform: linksys_smart
-  host: 192.168.42.1
-  #  username: !secret router_login
-  #password: !secret router_passwd
+  #device_tracker:
+  #- platform: linksys_smart
+  #  host: 192.168.42.1
+    #username: !secret router_login
+    #password: !secret router_passwd
   #interval_seconds: 30
   #consider_home: 600
   #new_defice_defaults:
@@ -84,8 +84,8 @@ http:
   #api_password: !secret api_passwd
   #ip_ban_enabled: true
   #login_attempts_threshold: 10
-  ssl_certificate: /etc/letsencrypt/live/home.reeps.io/fullchain.pem
-  ssl_key: /etc/letsencrypt/live/home.reeps.io/privkey.pem
+  #ssl_certificate: /etc/letsencrypt/live/home.reeps.io/fullchain.pem
+  #ssl_key: /etc/letsencrypt/live/home.reeps.io/privkey.pem
   base_url: home.reeps.io
 
 # Checks for available updates
@@ -163,12 +163,12 @@ sensor:
     scan_interval: 10800
     command: "/certbot/ssl-cert-check -b -c /etc/letsencrypt/live/home.reeps.io/cert.pem |awk '{print $NF}'"
   - platform: arlo
-    #monitored_conditions:
-    #  - captured_today
-    #  - last_capture
-    #  - total_cameras
-    #  - battery_level
-    #  - signal_strength
+    monitored_conditions:
+      - captured_today
+      - last_capture
+      - total_cameras
+      - battery_level
+      - signal_strength
 
 shell_command: !include shell_commands.yaml
 group: !include groups.yaml
