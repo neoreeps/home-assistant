@@ -4,7 +4,7 @@ homeassistant:
   latitude: 38.0725000
   longitude: -122.5616667
   # Impacts weather/sunrise data (altitude above sea level in meters)
-  elevation: 30
+  elevation: 160 
   # metric for Metric, imperial for Imperial
   unit_system: imperial
   # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
@@ -28,20 +28,39 @@ alexa:
 
 mobile_app:
 
+weather:
+  - platform: openweathermap
+    api_key: !secret openweathermap_api_key
+
 zwave:
   usb_path: /dev/ttyACM0
   device_config: !include zwave_device_config.yaml
-  network_key: "0x3E, 0x23, 0x17, 0x97, 0xD1, 0x1E, 0xAC, 0xA6, 0x14, 0x55, 0xB5, 0x6F, 0x87, 0x09, 0x6D, 0x6A"
+  network_key: 0xC2, 0x07, 0x25, 0xED, 0xF9, 0xB5, 0xDA, 0xEB, 0xD9, 0x19, 0x77, 0x9E, 0x24, 0xB9, 0x88, 0xEE
 
 system_health:
     
 lovelace:
     #  mode: yaml
 
-#wink:
+octoprint:
+  host: octopi.local
+  api_key: !secret octopi_key
+  name: Prusa
+  ssl: false
+  bed: true
+  number_of_tools: 1
 
-#ecobee:
-#api_key: arZo1lxMoEmEo2vT3W0HurOx5KheFoMA
+camera:
+  - platform: mjpeg
+    name: OctoPrint
+    still_image_url: http://192.168.42.243/webcam/?action=snapshot
+    mjpeg_url: http://192.168.42.243/webcam/?action=stream
+  - platform: aarlo
+    ffmpeg_arguments: '-pred 1 -q:v 2'
+      
+
+    #ecobee:
+    #api_key: !secret ecobee_key
 
 #tesla:
 #username: !secret tesla_login
@@ -138,15 +157,24 @@ speedtestdotnet:
 ffmpeg:
   ffmpeg_bin: /usr/bin/ffmpeg
 
-arlo:
+aarlo:
     username: !secret arlo_login
     password: !secret arlo_passwd
 
-camera:
-  - platform: arlo
-    ffmpeg_arguments: '-pred 1 -q:v 2'
-      
 sensor:
+  - platform: openweathermap
+    api_key: !secret openweathermap_api_key
+    monitored_conditions:
+      - weather
+      - temperature
+      - wind_speed
+      - wind_bearing
+      - humidity
+      - pressure
+      - clouds
+      - rain
+      - snow
+      - weather_code
   - platform: systemmonitor
     resources:
       - type: memory_use_percent
@@ -156,19 +184,27 @@ sensor:
         arg: wlan0
       - type: throughput_network_out
         arg: wlan0
-  - platform: yr
+#  - platform: yr  # deprecated and won't work
   - platform: command_line
     name: SSL cert expiry
     unit_of_measurement: days
     scan_interval: 10800
     command: "/certbot/ssl-cert-check -b -c /etc/letsencrypt/live/home.reeps.io/cert.pem |awk '{print $NF}'"
-  - platform: arlo
+  - platform: aarlo
     monitored_conditions:
       - captured_today
       - last_capture
       - total_cameras
       - battery_level
       - signal_strength
+  - platform: template
+    sensors:
+      prusa_time_elapsed_friendly:
+        friendly_name: Print Time Elapsed
+        value_template: "{{ states('sensor.prusa_time_elapsed') | int | timestamp_custom('%H:%M:%S', 0) }}"
+      prusa_time_remaining_friendly:
+        friendly_name: Print Time Remaining
+        value_template: "{{ states('sensor.prusa_time_remaining') | int | timestamp_custom('%H:%M:%S', 0) }}"
 
 shell_command: !include shell_commands.yaml
 group: !include groups.yaml

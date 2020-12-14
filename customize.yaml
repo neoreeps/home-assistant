@@ -4,3 +4,20 @@ sensor.network_throughput_out_wlan0:
   friendly_name: Network Tx
 sensor.processor_use:
   friendly_name: CPU Use
+
+sensor.prusa_actual_bed_temp:
+  unit_of_measurement: 'C'
+  friendly_name: Bed Temp - Current
+  icon: mdi:thermometer
+sensor.prusa_target_bed_temp:
+  unit_of_measurement: 'C'
+  friendly_name: Bed Temp - Target
+  icon: mdi:thermometer
+sensor.prusa_actual_tool0_temp:
+  unit_of_measurement: 'C'
+  friendly_name: Nozzle Temp - Current
+  icon: mdi:thermometer
+sensor.prusa_target_tool0_temp:
+  unit_of_measurement: 'C'
+  friendly_name: Nozzle Temp - Target
+  icon: mdi:thermometer

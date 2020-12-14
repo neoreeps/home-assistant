@@ -19,7 +19,7 @@ services:
 
   appdaemon:
     container_name: appdaemon
-    image: appdaemon
+    image: appdaemon:latest
     restart: always
     depends_on:
       - homeassistant
