@@ -105,7 +105,7 @@ http:
   #login_attempts_threshold: 10
   #ssl_certificate: /etc/letsencrypt/live/home.reeps.io/fullchain.pem
   #ssl_key: /etc/letsencrypt/live/home.reeps.io/privkey.pem
-  base_url: home.reeps.io
+  #base_url: home.reeps.io
 
 # Checks for available updates
 # Note: This component will send some information about your system to
