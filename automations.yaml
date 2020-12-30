@@ -1,15 +1,14 @@
 - id: '1609213001'
-  alias: 'Start HomeKit'
+  alias: Start HomeKit
   trigger:
-    - platform: event
-      event_type: zwave.network_ready
-    - platform: event
-      event_type: zwave.network_complete
-    - platform: event
-      event_type: zwave.network_complete_some_dead
+  - platform: event
+    event_type: zwave.network_ready
+  - platform: event
+    event_type: zwave.network_complete
+  - platform: event
+    event_type: zwave.network_complete_some_dead
   action:
-    - service: homekit.start
-
+  - service: homekit.start
 - id: '1575141383597'
   alias: Night Lights On
   description: Turn on the lights at sunset
@@ -47,8 +46,9 @@
   - entity_id: binary_sensor.kitchen_motion_sensor
     platform: state
     to: 'on'
+    from: 'off'
   condition:
-    condition: and
+  - condition: and
     conditions:
     - condition: state
       entity_id: light.kitchen_lights
@@ -66,6 +66,7 @@
       brightness_pct: 15
       entity_id: light.kitchen_lights
     service: homeassistant.turn_on
+  mode: single
 - id: '1577677822873'
   alias: Kitchen Lights Off
   description: Turn off when no motion is detected
@@ -102,9 +103,10 @@
         condition: sun
   action:
   - data:
-      brightness_pct: 30
+      brightness_pct: 15
       entity_id: light.dining_room_light
     service: homeassistant.turn_on
+  mode: single
 - id: '1577858907155'
   alias: Dining Lights Off
   description: Turn off the dining room lights when no motion is detected
@@ -197,3 +199,30 @@
       fan_min_on_time: 0
     entity_id: climate.upstairs
     service: ecobee.set_fan_min_on_time
+- id: '1609298626424'
+  alias: Gym Light On
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.ecolink_motion_detector_sensor
+    to: 'on'
+  condition: []
+  action:
+  - service: homeassistant.turn_on
+    data: {}
+    entity_id: switch.gym_light
+  mode: single
+- id: '1609298776809'
+  alias: Gym Light Off
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.ecolink_motion_detector_sensor
+    to: 'off'
+    for: 00:25:10
+  condition: []
+  action:
+  - service: homeassistant.turn_off
+    data: {}
+    entity_id: switch.gym_light
+  mode: single

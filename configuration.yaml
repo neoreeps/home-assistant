@@ -33,26 +33,29 @@ homekit:
   #advertise_ip: "192.168.42.2"
   #safe_mode: true
   filter:
-    include_entities:
-      - demo.demo
+    #include_entities:
+     #- demo.demo
+    exclude_entity_globs:
+      - camera.aarlo*
     exclude_domains:
       - device_tracker
       - zwave
+      - person
 
 logger:
   default: warning
-  logs:
-    homeassistant.components.homekit: debug
-    pyhap: debug
+  #logs:
+  #  homeassistant.components.homekit: debug
+  #  pyhap: debug
 
 alexa:
   smart_home: !include alexa.yaml
 
 mobile_app:
 
-weather:
-  - platform: openweathermap
-    api_key: !secret openweathermap_api_key
+#weather:
+#  - platform: openweathermap
+#    api_key: !secret openweathermap_api_key
 
 zwave:
   usb_path: /dev/ttyACM0
@@ -163,12 +166,12 @@ sun:
 
 #ios:
 
-    #cover:
-    #    - platform: myq
-    #  entity_namespace: myq
-    #  username: !secret myq_login
-    #  password: !secret myq_passwd
-    #  type: chamberlain
+cover:
+    - platform: myq
+      entity_namespace: myq
+      username: !secret myq_login
+      password: !secret myq_passwd
+      type: chamberlain
 
 speedtestdotnet:
   monitored_conditions:
@@ -184,19 +187,19 @@ aarlo:
     password: !secret arlo_passwd
 
 sensor:
-  - platform: openweathermap
-    api_key: !secret openweathermap_api_key
-    monitored_conditions:
-      - weather
-      - temperature
-      - wind_speed
-      - wind_bearing
-      - humidity
-      - pressure
-      - clouds
-      - rain
-      - snow
-      - weather_code
+    #- platform: openweathermap
+    #api_key: !secret openweathermap_api_key
+    #monitored_conditions:
+    #  - weather
+    #  - temperature
+    #  - wind_speed
+    #  - wind_bearing
+    #  - humidity
+    #  - pressure
+    #  - clouds
+    #  - rain
+    #  - snow
+    #  - weather_code
   - platform: systemmonitor
     resources:
       - type: memory_use_percent
