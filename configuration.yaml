@@ -23,6 +23,28 @@ homeassistant:
 #introduction:
 default_config:
 
+zeroconf:
+  default_interface: true
+
+homekit:
+  name: HASS Bridge
+  auto_start: false
+  #port: 51827
+  #advertise_ip: "192.168.42.2"
+  #safe_mode: true
+  filter:
+    include_entities:
+      - demo.demo
+    exclude_domains:
+      - device_tracker
+      - zwave
+
+logger:
+  default: warning
+  logs:
+    homeassistant.components.homekit: debug
+    pyhap: debug
+
 alexa:
   smart_home: !include alexa.yaml
 
@@ -43,7 +65,7 @@ lovelace:
     #  mode: yaml
 
 octoprint:
-  host: octopi.local
+  host: 192.168.42.241  #octopi.local
   api_key: !secret octopi_key
   name: Prusa
   ssl: false
@@ -53,8 +75,8 @@ octoprint:
 camera:
   - platform: mjpeg
     name: OctoPrint
-    still_image_url: http://192.168.42.243/webcam/?action=snapshot
-    mjpeg_url: http://192.168.42.243/webcam/?action=stream
+    still_image_url: http://192.168.42.241/webcam/?action=snapshot
+    mjpeg_url: http://192.168.42.241/webcam/?action=stream
   - platform: aarlo
     ffmpeg_arguments: '-pred 1 -q:v 2'
       
@@ -141,12 +163,12 @@ sun:
 
 #ios:
 
-cover:
-    - platform: myq
-      entity_namespace: myq
-      username: !secret myq_login
-      password: !secret myq_passwd
-      type: chamberlain
+    #cover:
+    #    - platform: myq
+    #  entity_namespace: myq
+    #  username: !secret myq_login
+    #  password: !secret myq_passwd
+    #  type: chamberlain
 
 speedtestdotnet:
   monitored_conditions:

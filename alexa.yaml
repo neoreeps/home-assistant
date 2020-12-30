@@ -23,3 +23,4 @@ filter:
     - light.table_left
     - light.floor_right
     - light.floor_left
+    - switch.gym_light
