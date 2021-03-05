@@ -13,7 +13,7 @@ filter:
     - switch.master_shower_fan
     - light.kitchen_lights
     - light.dining_room_light
-    - switch.family_room_light
+    - light.family_room_lights
     - switch.master_closet_light
     - light.study_light
     - light.craft_room_light

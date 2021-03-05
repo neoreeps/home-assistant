@@ -63,7 +63,7 @@
         before_offset: +01:00:00
   action:
   - data:
-      brightness_pct: 15
+      brightness_pct: 10
       entity_id: light.kitchen_lights
     service: homeassistant.turn_on
   mode: single
@@ -103,7 +103,7 @@
         condition: sun
   action:
   - data:
-      brightness_pct: 15
+      brightness_pct: 20
       entity_id: light.dining_room_light
     service: homeassistant.turn_on
   mode: single
@@ -190,7 +190,7 @@
   alias: Fan Off in Morning
   description: Turn off the upstairs fan at 6am
   trigger:
-  - at: 06:00:00
+  - at: 05:00:00
     platform: time
   condition: []
   action:
@@ -199,6 +199,7 @@
       fan_min_on_time: 0
     entity_id: climate.upstairs
     service: ecobee.set_fan_min_on_time
+  mode: single
 - id: '1609298626424'
   alias: Gym Light On
   description: ''
@@ -206,6 +207,7 @@
   - platform: state
     entity_id: binary_sensor.ecolink_motion_detector_sensor
     to: 'on'
+    from: 'off'
   condition: []
   action:
   - service: homeassistant.turn_on
@@ -225,4 +227,18 @@
   - service: homeassistant.turn_off
     data: {}
     entity_id: switch.gym_light
+  mode: single
+- id: '1609471279762'
+  alias: Study Light Off
+  description: Turn off the study light
+  trigger:
+  - entity_id: binary_sensor.office_occupancy
+    for: 00:30:10
+    platform: state
+    to: 'off'
+  condition: []
+  action:
+  - data:
+      entity_id: light.study_light
+    service: homeassistant.turn_off
   mode: single

@@ -166,12 +166,12 @@ sun:
 
 #ios:
 
-cover:
-    - platform: myq
-      entity_namespace: myq
-      username: !secret myq_login
-      password: !secret myq_passwd
-      type: chamberlain
+#cover:
+    #- platform: myq
+    #  entity_namespace: myq
+    #  username: !secret myq_login
+    #  password: !secret myq_passwd
+    #  type: chamberlain
 
 speedtestdotnet:
   monitored_conditions:
@@ -183,8 +183,8 @@ ffmpeg:
   ffmpeg_bin: /usr/bin/ffmpeg
 
 aarlo:
-    username: !secret arlo_login
-    password: !secret arlo_passwd
+  username: !secret arlo_login
+  password: !secret arlo_passwd
 
 sensor:
     #- platform: openweathermap
@@ -214,7 +214,8 @@ sensor:
     name: SSL cert expiry
     unit_of_measurement: days
     scan_interval: 10800
-    command: "/certbot/ssl-cert-check -b -c /etc/letsencrypt/live/home.reeps.io/cert.pem |awk '{print $NF}'"
+    #command: "/certbot/ssl-cert-check -b -c /etc/letsencrypt/live/home.reeps.io/cert.pem |awk '{print $NF}'"
+    command: "/certbot/ssl-cert-check -b -c /etc/certificate/ssl.pem |awk '{print $NF}'"
   - platform: aarlo
     monitored_conditions:
       - captured_today

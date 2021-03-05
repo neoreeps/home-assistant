@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  appdaemon:
+    container_name: appdaemon
+    image: appdaemon:latest
+    network_mode: host
+    restart: always
+    volumes:
+      - /data/apps/appdaemon/conf:/conf
+    ports:
+      - 5050:5050

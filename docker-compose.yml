@@ -3,13 +3,14 @@ version: '3'
 services:
   homeassistant:
     container_name: home-assistant
-    image: homeassistant/raspberrypi3-homeassistant:stable
-    network_mode: host
+    image: homeassistant/home-assistant:stable
+    networks:
+      - ha-net
     restart: always
     volumes:
-      - /data/ha-config:/config
-      - /data/certbot:/certbot
-      - /etc/letsencrypt:/etc/letsencrypt
+      - /volume1/ksfs/k8s_data/ha-config:/config
+      - /volume1/ksfs/k8s_data/certbot:/certbot
+      - /usr/builtin/etc/certificate:/etc/certificate
       - /etc/localtime:/etc/localtime:ro
     devices:
       - /dev/ttyACM0:/dev/ttyACM0
@@ -17,28 +18,20 @@ services:
       - 8123:8123
       - 51827:51827
 
-  appdaemon:
-    container_name: appdaemon
-    image: appdaemon:latest
-    network_mode: host
-    restart: always
-    depends_on:
-      - homeassistant
-    volumes:
-      - /data/apps/appdaemon/conf:/conf
-    ports:
-      - 5050:5050
-
   proxy:
     container_name: nginx-proxy
     hostname: nginx-proxy
     image: nginx
-    network_mode: host
+    networks:
+      - ha-net
     restart: always
     depends_on:
       - homeassistant
     volumes:
-      - /data/apps/nginx:/etc/nginx
-      - /etc/letsencrypt:/etc/letsencrypt
+      - /volume1/ksfs/k8s_data/apps/nginx:/etc/nginx
+      - /usr/builtin/etc/certificate:/etc/certificate
     ports:
-      - 443:443
+      - 8443:443
+
+networks:
+  ha-net:
