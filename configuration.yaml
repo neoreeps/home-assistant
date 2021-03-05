@@ -88,9 +88,9 @@ camera:
     #api_key: !secret ecobee_key
 
 #tesla:
-#username: !secret tesla_login
-#password: !secret tesla_passwd
-#scan_interval: 3600
+#  username: !secret tesla_login
+#  password: !secret tesla_passwd
+#  scan_interval: 3600
 
 # simplisafe
 #alarm_control_panel:
