@@ -4,8 +4,7 @@ services:
   homeassistant:
     container_name: home-assistant
     image: homeassistant/home-assistant:stable
-    networks:
-      - ha-net
+    network_mode: host
     restart: always
     volumes:
       - /volume1/ksfs/k8s_data/ha-config:/config

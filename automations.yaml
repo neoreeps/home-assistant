@@ -14,7 +14,7 @@
   description: Turn on the lights at sunset
   trigger:
   - event: sunset
-    offset: -01:00
+    offset: -02:00
     platform: sun
   condition: []
   action:
@@ -25,6 +25,7 @@
   - data:
       entity_id: switch.porch_lights
     service: homeassistant.turn_on
+  mode: single
 - id: '1575141770149'
   alias: Night Lights Off
   description: Turn off the lights at sunrise
@@ -57,10 +58,10 @@
       conditions:
       - condition: sun
         after: sunset
-        after_offset: -01:00:00
+        after_offset: -03:00:00
       - condition: sun
         before: sunrise
-        before_offset: +01:00:00
+        before_offset: +02:00:00
   action:
   - data:
       brightness_pct: 10
@@ -91,7 +92,7 @@
   - condition: and
     conditions:
     - condition: state
-      entity_id: light.dining_room_light
+      entity_id: light.office_ceiling_light
       state: 'off'
     - condition: or
       conditions:
@@ -177,7 +178,7 @@
   alias: Fan On at Night
   description: Turn on the upstairs fan at 9pm
   trigger:
-  - at: '21:00:00'
+  - at: '20:30:00'
     platform: time
   condition: []
   action:
@@ -186,6 +187,7 @@
       fan_min_on_time: 60
     entity_id: climate.upstairs
     service: ecobee.set_fan_min_on_time
+  mode: single
 - id: '1597551452597'
   alias: Fan Off in Morning
   description: Turn off the upstairs fan at 6am
@@ -232,13 +234,56 @@
   alias: Study Light Off
   description: Turn off the study light
   trigger:
-  - entity_id: binary_sensor.office_occupancy
-    for: 00:30:10
-    platform: state
-    to: 'off'
+  - type: turned_off
+    platform: device
+    device_id: 24af8e197022ed4bd5c3107052d73eb6
+    entity_id: binary_sensor.office_motion_sensor
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 20
+      seconds: 0
+      milliseconds: 0
   condition: []
   action:
   - data:
       entity_id: light.study_light
     service: homeassistant.turn_off
+  mode: single
+- id: '1619809018468'
+  alias: Office Lights On
+  description: ''
+  trigger:
+  - type: turned_on
+    platform: device
+    device_id: 24af8e197022ed4bd5c3107052d73eb6
+    entity_id: binary_sensor.office_motion_sensor
+    domain: binary_sensor
+  condition: []
+  action:
+  - data:
+      brightness_pct: 65
+    entity_id: light.office_ceiling_light
+    service: light.turn_on
+  mode: single
+- id: '1619818850342'
+  alias: Office Lights Off
+  description: ''
+  trigger:
+  - type: turned_off
+    platform: device
+    device_id: 24af8e197022ed4bd5c3107052d73eb6
+    entity_id: binary_sensor.office_motion_sensor
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 20
+      seconds: 0
+      milliseconds: 0
+  condition: []
+  action:
+  - service: light.turn_off
+    target:
+      entity_id: light.office_ceiling_light
+    data: {}
   mode: single

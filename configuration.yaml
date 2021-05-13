@@ -28,19 +28,20 @@ zeroconf:
 
 homekit:
   name: HASS Bridge
-  auto_start: false
+  #auto_start: false
   #port: 51827
-  #advertise_ip: "192.168.42.2"
+  #advertise_ip: "192.168.42.11"
   #safe_mode: true
   filter:
     #include_entities:
      #- demo.demo
-    exclude_entity_globs:
+     exclude_entity_globs:
       - camera.aarlo*
-    exclude_domains:
+     exclude_domains:
       - device_tracker
       - zwave
       - person
+      - camera
 
 logger:
   default: warning
@@ -80,8 +81,8 @@ camera:
     name: OctoPrint
     still_image_url: http://192.168.42.241/webcam/?action=snapshot
     mjpeg_url: http://192.168.42.241/webcam/?action=stream
-  - platform: aarlo
-    ffmpeg_arguments: '-pred 1 -q:v 2'
+  #- platform: aarlo
+  #  ffmpeg_arguments: '-pred 1 -q:v 2'
       
 
     #ecobee:
@@ -139,7 +140,7 @@ http:
 # https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
 updater:
   # Optional, allows Home Assistant developers to focus on popular components.
-  include_used_components: true
+  #include_used_components: true
 
 # Discover some devices automatically
 discovery:
@@ -182,9 +183,9 @@ speedtestdotnet:
 ffmpeg:
   ffmpeg_bin: /usr/bin/ffmpeg
 
-aarlo:
-  username: !secret arlo_login
-  password: !secret arlo_passwd
+#aarlo:
+#  username: !secret arlo_login
+#  password: !secret arlo_passwd
 
 sensor:
     #- platform: openweathermap
@@ -216,13 +217,13 @@ sensor:
     scan_interval: 10800
     #command: "/certbot/ssl-cert-check -b -c /etc/letsencrypt/live/home.reeps.io/cert.pem |awk '{print $NF}'"
     command: "/certbot/ssl-cert-check -b -c /etc/certificate/ssl.pem |awk '{print $NF}'"
-  - platform: aarlo
-    monitored_conditions:
-      - captured_today
-      - last_capture
-      - total_cameras
-      - battery_level
-      - signal_strength
+  #- platform: aarlo
+  #  monitored_conditions:
+  #    - captured_today
+  #    - last_capture
+  #    - total_cameras
+  #    - battery_level
+  #    - signal_strength
   - platform: template
     sensors:
       prusa_time_elapsed_friendly:
