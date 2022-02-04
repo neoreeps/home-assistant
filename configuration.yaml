@@ -1,10 +1,10 @@
 homeassistant:
   name: Home
   # Location required to calculate the time the sun rises and sets
-  latitude: 38.0725000
-  longitude: -122.5616667
+  latitude: !secret latitude
+  longitude: !secret longitude
   # Impacts weather/sunrise data (altitude above sea level in meters)
-  elevation: 160 
+  elevation: !secret elevation
   # metric for Metric, imperial for Imperial
   unit_system: imperial
   # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
@@ -49,8 +49,8 @@ logger:
   #  homeassistant.components.homekit: debug
   #  pyhap: debug
 
-alexa:
-  smart_home: !include alexa.yaml
+#alexa:
+#  smart_home: !include alexa.yaml
 
 mobile_app:
 
@@ -215,8 +215,8 @@ sensor:
     name: SSL cert expiry
     unit_of_measurement: days
     scan_interval: 10800
-    #command: "/certbot/ssl-cert-check -b -c /etc/letsencrypt/live/home.reeps.io/cert.pem |awk '{print $NF}'"
-    command: "/certbot/ssl-cert-check -b -c /etc/certificate/ssl.pem |awk '{print $NF}'"
+    command: "/certbot/ssl-cert-check -b -c /etc/letsencrypt/live/home.reeps.io/cert.pem |awk '{print $NF}'"
+    #command: "/certbot/ssl-cert-check -b -c /etc/certificate/ssl.pem |awk '{print $NF}'"
   #- platform: aarlo
   #  monitored_conditions:
   #    - captured_today

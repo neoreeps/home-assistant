@@ -19,12 +19,20 @@
   condition: []
   action:
   - data:
-      brightness_pct: 15
+      brightness_pct: 20
+    service: homeassistant.turn_on
+    target:
       entity_id: light.stair_lights
-    service: homeassistant.turn_on
   - data:
-      entity_id: switch.porch_lights
+      brightness_pct: 25
     service: homeassistant.turn_on
+    target:
+      entity_id: light.entrance_lights
+  - data:
+      brightness_pct: 60
+    service: homeassistant.turn_on
+    target:
+      entity_id: light.porch_lights
   mode: single
 - id: '1575141770149'
   alias: Night Lights Off
@@ -34,39 +42,37 @@
     platform: sun
   condition: []
   action:
-  - data:
-      entity_id: light.stair_lights
+  - data: {}
     service: homeassistant.turn_off
-  - data:
-      entity_id: switch.porch_lights
-    service: homeassistant.turn_off
+    target:
+      entity_id:
+      - light.stair_lights
+      - light.entrance_lights
+      - light.porch_lights
+  mode: single
 - id: '1577677205027'
-  alias: Kitchen Lights On
+  alias: Kitchen Lights 10%
   description: Turn on the kitchen lights with motion
   trigger:
   - entity_id: binary_sensor.kitchen_motion_sensor
     platform: state
     to: 'on'
-    from: 'off'
   condition:
   - condition: and
     conditions:
     - condition: state
       entity_id: light.kitchen_lights
       state: 'off'
-    - condition: or
-      conditions:
-      - condition: sun
-        after: sunset
-        after_offset: -03:00:00
-      - condition: sun
-        before: sunrise
-        before_offset: +02:00:00
+    - condition: time
+      after: 01:00:00
+    - condition: sun
+      before: sunrise
   action:
   - data:
       brightness_pct: 10
-      entity_id: light.kitchen_lights
     service: homeassistant.turn_on
+    target:
+      entity_id: light.kitchen_lights
   mode: single
 - id: '1577677822873'
   alias: Kitchen Lights Off
@@ -78,9 +84,13 @@
     to: 'off'
   condition: []
   action:
-  - data:
-      entity_id: light.kitchen_lights
+  - data: {}
     service: homeassistant.turn_off
+    target:
+      entity_id:
+      - light.kitchen_lights
+      - light.family_room
+  mode: single
 - id: '1577858799562'
   alias: Dining Light On
   description: Turn on the dining room light with motion
@@ -92,21 +102,22 @@
   - condition: and
     conditions:
     - condition: state
-      entity_id: light.office_ceiling_light
+      entity_id: light.dining_room_light
       state: 'off'
     - condition: or
       conditions:
       - after: sunset
-        after_offset: -01:00:00
+        after_offset: -02:00:00
         condition: sun
       - before: sunrise
-        before_offset: +01:00:00
+        before_offset: +02:00:00
         condition: sun
   action:
   - data:
       brightness_pct: 20
-      entity_id: light.dining_room_light
     service: homeassistant.turn_on
+    target:
+      entity_id: light.dining_room_light
   mode: single
 - id: '1577858907155'
   alias: Dining Lights Off
@@ -121,12 +132,13 @@
   - data:
       entity_id: light.dining_room_light
     service: homeassistant.turn_off
+  mode: single
 - id: '1584326906110'
   alias: Lights On at Sunset
   description: Turn on lights at offset
   trigger:
   - event: sunset
-    offset: -01:00:00
+    offset: -02:00:00
     platform: sun
   condition: []
   action:
@@ -154,6 +166,7 @@
       brightness_pct: 65
     entity_id: light.floor_right
     service: light.turn_on
+  mode: single
 - id: '1584327993330'
   alias: Master Lights Off
   description: Turn off the master lights when nobody is home
@@ -178,7 +191,7 @@
   alias: Fan On at Night
   description: Turn on the upstairs fan at 9pm
   trigger:
-  - at: '20:30:00'
+  - at: '20:35:00'
     platform: time
   condition: []
   action:
@@ -186,6 +199,10 @@
       entity_id: climate.upstairs
       fan_min_on_time: 60
     entity_id: climate.upstairs
+    service: ecobee.set_fan_min_on_time
+  - data:
+      fan_min_on_time: 60
+      entity_id: 'climate.downstairs '
     service: ecobee.set_fan_min_on_time
   mode: single
 - id: '1597551452597'
@@ -200,6 +217,10 @@
       entity_id: climate.upstairs
       fan_min_on_time: 0
     entity_id: climate.upstairs
+    service: ecobee.set_fan_min_on_time
+  - data:
+      entity_id: climate.downstairs
+      fan_min_on_time: 0
     service: ecobee.set_fan_min_on_time
   mode: single
 - id: '1609298626424'
@@ -259,12 +280,16 @@
     device_id: 24af8e197022ed4bd5c3107052d73eb6
     entity_id: binary_sensor.office_motion_sensor
     domain: binary_sensor
-  condition: []
+  condition:
+  - condition: state
+    entity_id: light.office_ceiling_light
+    state: 'off'
   action:
   - data:
-      brightness_pct: 65
-    entity_id: light.office_ceiling_light
+      brightness_pct: 32
     service: light.turn_on
+    target:
+      entity_id: light.office_ceiling_light
   mode: single
 - id: '1619818850342'
   alias: Office Lights Off
@@ -286,4 +311,105 @@
     target:
       entity_id: light.office_ceiling_light
     data: {}
+  mode: single
+- id: '1629759651080'
+  alias: Notify when Miner is unresponsive
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: sensor.glances_cpu_load
+    to: unavailable
+    for: 00:05
+  condition: []
+  action:
+  - service: notify.mobile_app_kennys_iphone
+    data:
+      message: Miner is Unavailable
+      title: 'HA: URGENT'
+  mode: single
+- id: '1630288053809'
+  alias: Night Lights Dim
+  description: Adjust lights after sunset
+  trigger:
+  - event: sunset
+    offset: +01:00
+    platform: sun
+  condition: []
+  action:
+  - data:
+      brightness_pct: 15
+    service: homeassistant.turn_on
+    target:
+      entity_id:
+      - light.entrance_lights
+      - light.stair_lights
+  - data:
+      brightness_pct: 25
+    service: homeassistant.turn_on
+    target:
+      entity_id: light.porch_lights
+  mode: single
+- id: '1630288843753'
+  alias: Night Lights Porch Off
+  description: Porch Lights Off 4 hours after sunset
+  trigger:
+  - platform: time
+    at: '23:00:00'
+  condition: []
+  action:
+  - service: homeassistant.turn_off
+    target:
+      entity_id:
+      - light.porch_lights
+      - light.entrance_lights
+  mode: single
+- id: '1635215327717'
+  alias: Kitchen Lights 30%
+  description: Turn on the kitchen lights with motion
+  trigger:
+  - entity_id: binary_sensor.kitchen_motion_sensor
+    platform: state
+    to: 'on'
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: light.kitchen_lights
+      state: 'off'
+    - condition: or
+      conditions:
+      - condition: time
+        before: 01:00:00
+      - condition: sun
+        after: sunset
+  action:
+  - data:
+      brightness_pct: 30
+    service: homeassistant.turn_on
+    target:
+      entity_id: light.kitchen_lights
+  mode: single
+- id: '1635635334662'
+  alias: Kitchen Lights 60%
+  description: Turn on the kitchen lights with motion
+  trigger:
+  - entity_id: binary_sensor.kitchen_motion_sensor
+    platform: state
+    to: 'on'
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: light.kitchen_lights
+      state: 'off'
+    - condition: sun
+      after: sunrise
+    - condition: sun
+      before: sunset
+  action:
+  - data:
+      brightness_pct: 60
+    service: homeassistant.turn_on
+    target:
+      entity_id: light.kitchen_lights
   mode: single
