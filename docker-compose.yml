@@ -21,6 +21,7 @@ services:
     container_name: nginx-proxy
     hostname: nginx-proxy
     image: nginx
+    restart: always
     network_mode: host
     ports:
       - 8443:443
