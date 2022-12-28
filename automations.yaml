@@ -14,8 +14,8 @@
   description: Turn on the lights at sunset
   trigger:
   - event: sunset
-    offset: -02:00
     platform: sun
+    offset: -01:00
   condition: []
   action:
   - data:
@@ -33,6 +33,9 @@
     service: homeassistant.turn_on
     target:
       entity_id: light.porch_lights
+  - service: homeassistant.turn_on
+    target:
+      entity_id: switch.outdoor
   mode: single
 - id: '1575141770149'
   alias: Night Lights Off
@@ -312,21 +315,6 @@
       entity_id: light.office_ceiling_light
     data: {}
   mode: single
-- id: '1629759651080'
-  alias: Notify when Miner is unresponsive
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: sensor.glances_cpu_load
-    to: unavailable
-    for: 00:05
-  condition: []
-  action:
-  - service: notify.mobile_app_kennys_iphone
-    data:
-      message: Miner is Unavailable
-      title: 'HA: URGENT'
-  mode: single
 - id: '1630288053809'
   alias: Night Lights Dim
   description: Adjust lights after sunset
@@ -337,7 +325,7 @@
   condition: []
   action:
   - data:
-      brightness_pct: 15
+      brightness_pct: 17
     service: homeassistant.turn_on
     target:
       entity_id:
@@ -351,10 +339,10 @@
   mode: single
 - id: '1630288843753'
   alias: Night Lights Porch Off
-  description: Porch Lights Off 4 hours after sunset
+  description: Porch Lights Off @ 10:30 PM
   trigger:
   - platform: time
-    at: '23:00:00'
+    at: '22:30:00'
   condition: []
   action:
   - service: homeassistant.turn_off
@@ -362,6 +350,7 @@
       entity_id:
       - light.porch_lights
       - light.entrance_lights
+      - switch.outdoor
   mode: single
 - id: '1635215327717'
   alias: Kitchen Lights 30%
@@ -412,28 +401,4 @@
     service: homeassistant.turn_on
     target:
       entity_id: light.kitchen_lights
-  mode: single
-- id: '1648774217307'
-  alias: Mining Rig Off
-  description: ''
-  trigger:
-  - platform: time
-    at: '16:00:00'
-  condition: []
-  action:
-  - service: switch.turn_off
-    target:
-      entity_id: switch.outdoor
-  mode: single
-- id: '1648774457463'
-  alias: Mining Rig On
-  description: ''
-  trigger:
-  - platform: time
-    at: '21:00:00'
-  condition: []
-  action:
-  - service: switch.turn_on
-    target:
-      entity_id: switch.outdoor
   mode: single

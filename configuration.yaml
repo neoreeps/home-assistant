@@ -9,6 +9,8 @@ homeassistant:
   unit_system: imperial
   # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
   time_zone: America/Los_Angeles
+  country: US
+  currency: USD
   
   customize: !include customize.yaml
 
@@ -58,23 +60,23 @@ mobile_app:
 #  - platform: openweathermap
 #    api_key: !secret openweathermap_api_key
 
-zwave:
-  usb_path: /dev/ttyACM0
-  device_config: !include zwave_device_config.yaml
-  network_key: 0xC2, 0x07, 0x25, 0xED, 0xF9, 0xB5, 0xDA, 0xEB, 0xD9, 0x19, 0x77, 0x9E, 0x24, 0xB9, 0x88, 0xEE
+#zwave:
+#  usb_path: /dev/ttyACM0
+#  device_config: !include zwave_device_config.yaml
+#  network_key: 0xC2, 0x07, 0x25, 0xED, 0xF9, 0xB5, 0xDA, 0xEB, 0xD9, 0x19, 0x77, 0x9E, 0x24, 0xB9, 0x88, 0xEE
 
 system_health:
     
 lovelace:
     #  mode: yaml
 
-octoprint:
-  host: 192.168.42.241  #octopi.local
-  api_key: !secret octopi_key
-  name: Prusa
-  ssl: false
-  bed: true
-  number_of_tools: 1
+#octoprint:
+#  host: 192.168.42.241  #octopi.local
+#  api_key: !secret octopi_key
+#  name: Prusa
+#  ssl: false
+#  bed: true
+#  number_of_tools: 1
 
 camera:
   - platform: mjpeg
@@ -132,13 +134,16 @@ http:
   #ssl_certificate: /etc/letsencrypt/live/home.reeps.io/fullchain.pem
   #ssl_key: /etc/letsencrypt/live/home.reeps.io/privkey.pem
   #base_url: home.reeps.io
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 192.168.42.2
 
 # Checks for available updates
 # Note: This component will send some information about your system to
 # the developers to assist with development of Home Assistant.
 # For more information, please see:
 # https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
-updater:
+#updater:
   # Optional, allows Home Assistant developers to focus on popular components.
   #include_used_components: true
 
