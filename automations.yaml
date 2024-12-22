@@ -32,10 +32,9 @@
       brightness_pct: 60
     service: homeassistant.turn_on
     target:
-      entity_id: light.porch_lights
-  - service: homeassistant.turn_on
-    target:
-      entity_id: switch.outdoor
+      entity_id:
+      - light.porch_lights
+      - light.driveway_side
   mode: single
 - id: '1575141770149'
   alias: Night Lights Off
@@ -52,6 +51,7 @@
       - light.stair_lights
       - light.entrance_lights
       - light.porch_lights
+      - light.driveway_side
   mode: single
 - id: '1577677205027'
   alias: Kitchen Lights 10%
@@ -68,6 +68,7 @@
       state: 'off'
     - condition: time
       after: 01:00:00
+      before: 00:00:00
     - condition: sun
       before: sunrise
   action:
@@ -194,7 +195,7 @@
   alias: Fan On at Night
   description: Turn on the upstairs fan at 9pm
   trigger:
-  - at: '20:35:00'
+  - at: '20:15:00'
     platform: time
   condition: []
   action:
@@ -253,26 +254,6 @@
   - service: homeassistant.turn_off
     data: {}
     entity_id: switch.gym_light
-  mode: single
-- id: '1609471279762'
-  alias: Study Light Off
-  description: Turn off the study light
-  trigger:
-  - type: turned_off
-    platform: device
-    device_id: 24af8e197022ed4bd5c3107052d73eb6
-    entity_id: binary_sensor.office_motion_sensor
-    domain: binary_sensor
-    for:
-      hours: 0
-      minutes: 20
-      seconds: 0
-      milliseconds: 0
-  condition: []
-  action:
-  - data:
-      entity_id: light.study_light
-    service: homeassistant.turn_off
   mode: single
 - id: '1619809018468'
   alias: Office Lights On
@@ -335,7 +316,9 @@
       brightness_pct: 25
     service: homeassistant.turn_on
     target:
-      entity_id: light.porch_lights
+      entity_id:
+      - light.porch_lights
+      - light.driveway_side
   mode: single
 - id: '1630288843753'
   alias: Night Lights Porch Off
@@ -350,7 +333,8 @@
       entity_id:
       - light.porch_lights
       - light.entrance_lights
-      - switch.outdoor
+      - light.driveway_side
+    data: {}
   mode: single
 - id: '1635215327717'
   alias: Kitchen Lights 30%
@@ -369,6 +353,7 @@
       conditions:
       - condition: time
         before: 01:00:00
+        after: 00:00:00
       - condition: sun
         after: sunset
   action:
